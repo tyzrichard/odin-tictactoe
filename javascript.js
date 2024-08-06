@@ -37,7 +37,7 @@ function GameBoard() {
 
     const checkWin = (token) => {
         for (i = 0; i < 3; i++) {
-            if (board[i][0].getValue() == token && board[i][1].getValue() == token && board[i][1].getValue() == token) { //Check for row wins
+            if (board[i][0].getValue() == token && board[i][1].getValue() == token && board[i][2].getValue() == token) { //Check for row wins
                 return true;
             } else if (board[0][i].getValue() == token && board[1][i].getValue() == token && board[2][i].getValue() == token) { //Check for column wins
                 return true;
