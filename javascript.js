@@ -20,7 +20,7 @@ function GameBoard() {
     const checkSpace = (row, column) => {
         if (board[row][column].getValue() !== 0) {
             return true;
-        } 
+        }
         return false;
     }
 
@@ -35,7 +35,23 @@ function GameBoard() {
         console.log(boardWithCellValues);
     };
 
-    return { getBoard, checkSpace, putToken, printBoard };
+    const checkWin = (token) => {
+        for (i = 0; i < 3; i++) {
+            if (board[i][0].getValue() == token && board[i][1].getValue() == token && board[i][1].getValue() == token) { //Check for row wins
+                return true;
+            } else if (board[0][i].getValue() == token && board[1][i].getValue() == token && board[2][i].getValue() == token) { //Check for column wins
+                return true;
+            }
+        }
+        if (board[0][0].getValue() == token && board[1][1].getValue() == token && board[2][2].getValue() == token) { //Check for both diagonal wins
+            return true;
+        } else if (board[0][2].getValue() == token && board[1][1].getValue() == token && board[2][0].getValue() == token) {
+            return true;
+        }
+        return false;
+    };
+
+    return { getBoard, checkSpace, putToken, printBoard, checkWin };
 }
 
 // A singular cell, with the value 0 (unclaimed), 1 (first player) or 2 (second player)
@@ -79,11 +95,13 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
         } else {
             console.log(`Putting ${getActivePlayer().name}'s token into column ${column}, row ${row}...`);
             board.putToken(row, column, getActivePlayer().token);
-
-            //Game Logic
-
-            switchPlayerTurn();
-            printNewRound();
+            if (board.checkWin(getActivePlayer().token)) {
+                console.log(`Congratulations! ${getActivePlayer().name} wins!`);
+                board.printBoard();
+            } else {
+                switchPlayerTurn();
+                printNewRound();
+            }
         }
     };
 
@@ -97,5 +115,5 @@ const game = GameController();
 game.playRound(1, 1);
 game.playRound(2, 1);
 game.playRound(0, 0);
-game.playRound(1, 1);
+game.playRound(0, 1);
 game.playRound(2, 2);
