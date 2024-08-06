@@ -16,14 +16,17 @@ function GameBoard() {
 
     const getBoard = () => board; // Method of getting the entire board
 
-    // Checks if a space is taken, it it's free, it puts the player's token inside
-    const putToken = (row, column, player) => {
-        console.log(board[row][column].getValue())
+    // Checks a space
+    const checkSpace = (row, column) => {
         if (board[row][column].getValue() !== 0) {
-            return;
-        } else {
-            board[row][column].addToken(player);
-        }
+            return true;
+        } 
+        return false;
+    }
+
+    // Puts the player's token inside
+    const putToken = (row, column, player) => {
+        board[row][column].addToken(player);
     }
 
     // Method to print board for testing purposes, will remove after porting to UI
@@ -32,7 +35,7 @@ function GameBoard() {
         console.log(boardWithCellValues);
     };
 
-    return { getBoard, putToken, printBoard };
+    return { getBoard, checkSpace, putToken, printBoard };
 }
 
 // A singular cell, with the value 0 (unclaimed), 1 (first player) or 2 (second player)
@@ -47,6 +50,8 @@ function Cell() {
 
     return { addToken, getValue };
 }
+
+
 
 function GameController(p1Name = "Player One", p2Name = "Player Two") {
     const board = GameBoard();
@@ -69,13 +74,17 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
     };
 
     const playRound = (row, column) => {
-        console.log(`Putting ${getActivePlayer().name}'s token into column ${column}, row ${row}...`);
-        board.putToken(row, column, getActivePlayer().token);
+        if (board.checkSpace(row, column)) {
+            console.log(`Position (${row}, ${column}) is already taken. Trying again...`);
+        } else {
+            console.log(`Putting ${getActivePlayer().name}'s token into column ${column}, row ${row}...`);
+            board.putToken(row, column, getActivePlayer().token);
 
-        //Game Logic
+            //Game Logic
 
-        switchPlayerTurn();
-        printNewRound();
+            switchPlayerTurn();
+            printNewRound();
+        }
     };
 
     //Initial Game Message
