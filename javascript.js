@@ -1,6 +1,8 @@
 // Lots of the stuff here is taken from this replit: https://replit.com/@40percentzinc/ConnectFourConsole#script.js
 // Very helpful, credits to Alex Younger!
 
+const boardGridCells = document.querySelectorAll(".cell");
+
 function GameBoard() {
     // Creating Gameboard
     const rows = 3;
@@ -57,6 +59,9 @@ function GameBoard() {
 // A singular cell, with the value 0 (unclaimed), 1 (first player) or 2 (second player)
 function Cell() {
     let value = 0;
+    // const cell = document.createElement("div");
+    // cell.classList.add("cell");
+    // boardGrid.appendChild(cell);
 
     const addToken = (player) => {
         value = player;
@@ -67,10 +72,36 @@ function Cell() {
     return { addToken, getValue };
 }
 
+function DomController() {
 
+    const addCellIcon = (row, column, token) => {
+        const cellIcon = document.createElement("img");
+        if (token == 1) {
+            cellIcon.src = "assets/circle.svg";
+        } else {
+            cellIcon.src = "assets/cross.svg";
+        }
+        boardGridCells[3 * row + column].appendChild(cellIcon);
+    }
+
+    const resetCells = () => {
+        boardGridCells.forEach((cell) => {
+            if (cell.firstElementChild) {
+                cell.firstElementChild.remove();
+            }
+        });
+    }
+
+
+    return { addCellIcon, resetCells };
+}
 
 function GameController(p1Name = "Player One", p2Name = "Player Two") {
-    const board = GameBoard();
+    let board = GameBoard();
+    const dom = DomController();
+
+    let win = false;
+
     const players = [
         { name: p1Name, token: 1 },
         { name: p2Name, token: 2 },
@@ -90,30 +121,46 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
     };
 
     const playRound = (row, column) => {
-        if (board.checkSpace(row, column)) {
-            console.log(`Position (${row}, ${column}) is already taken. Trying again...`);
-        } else {
+        if (win) {
+            win = false;
+            resetGame();
+            return
+        }
+        if (!board.checkSpace(row, column)) {
             console.log(`Putting ${getActivePlayer().name}'s token into column ${column}, row ${row}...`);
             board.putToken(row, column, getActivePlayer().token);
+            dom.addCellIcon(row, column, getActivePlayer().token)
             if (board.checkWin(getActivePlayer().token)) {
+                win = true;
                 console.log(`Congratulations! ${getActivePlayer().name} wins!`);
                 board.printBoard();
             } else {
-                switchPlayerTurn();
                 printNewRound();
             }
+            switchPlayerTurn();
         }
     };
+
+    const resetGame = () => {
+        dom.resetCells(); // Resets the cells on the frontend...
+        board = GameBoard(); // ... and the backend too!
+        console.log("reset")
+    }
 
     //Initial Game Message
     printNewRound();
 
-    return { playRound, getActivePlayer };
+    return { playRound, getActivePlayer, resetGame };
 }
 
 const game = GameController();
-game.playRound(1, 1);
-game.playRound(2, 1);
-game.playRound(0, 0);
-game.playRound(0, 1);
-game.playRound(2, 2);
+
+let cellIndex = 0;
+boardGridCells.forEach((cell) => {
+    const column = cellIndex % 3;
+    const row = (cellIndex - column) / 3;
+    cell.addEventListener("click", () => {
+        game.playRound(row, column);
+    });
+    cellIndex++;
+});
