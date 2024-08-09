@@ -97,6 +97,18 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
     const dom = DomController();
 
     let end = false;
+    let rounds = 0;
+
+    const incrementRounds = () => {
+        if (rounds < 8) {
+            rounds++;
+        } else {
+            rounds = 0;
+            end = true;
+            dom.updateHeader(`It's a tie!`);
+            switchPlayerTurn();
+        }
+    }
 
     const players = [
         { name: p1Name, token: 1 },
@@ -107,7 +119,7 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
 
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
-        
+
     };
 
     const getActivePlayer = () => activePlayer;
@@ -133,14 +145,15 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
             } else {
                 switchPlayerTurn();
                 dom.updateHeader(`${getActivePlayer().name}'s turn:`);
+                incrementRounds();
             }
-            
         }
     };
 
     const resetGame = () => {
         dom.resetCells(); // Resets the cells on the frontend...
         board = GameBoard(); // ... and the backend too!
+        rounds = 0;
     }
 
     //Initial Game Message
