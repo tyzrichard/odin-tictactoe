@@ -115,16 +115,18 @@ body {
     border-radius: 5px;
 }
 
-.p1score {
-    background-color: #F86E6E;
+.p1score, .p2score {
     height: 100%;
     flex: 1;
+    text-align: center;
+}
+
+.p1score {
+    background-color: #F86E6E;
 }
 
 .p2score {
     background-color: #6980F6;
-    height: 100%;
-    flex: 1;
 }
 
 .icons {

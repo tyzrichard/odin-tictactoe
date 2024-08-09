@@ -88,8 +88,21 @@ function DomController() {
         });
     }
 
+    const scoreBars = document.querySelector(".score-bar").children;
 
-    return { addCellIcon, resetCells, updateHeader };
+    const updateScoreBar = (p1score, p2score) => {
+        console.log(p1score, p2score)
+        scoreBars[0].style.flex = p1score;
+        if (p1score) {
+            scoreBars[0].textContent = p1score;
+        }
+        scoreBars[1].style.flex = p2score;
+        if (p2score) {
+            scoreBars[1].textContent = p2score;
+        }
+    }
+
+    return { addCellIcon, resetCells, updateHeader, updateScoreBar };
 }
 
 function GameController(p1Name = "Player One", p2Name = "Player Two") {
@@ -111,8 +124,8 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
     }
 
     const players = [
-        { name: p1Name, token: 1 },
-        { name: p2Name, token: 2 },
+        { name: p1Name, token: 1, points: 0},
+        { name: p2Name, token: 2, points: 0},
     ];
 
     let activePlayer = players[0];
@@ -141,6 +154,8 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
             if (board.checkWin(getActivePlayer().token)) {
                 end = true;
                 dom.updateHeader(`Congratulations! ${getActivePlayer().name} wins!`);
+                getActivePlayer().points++;
+                dom.updateScoreBar(players[0].points, players[1].points);
                 switchPlayerTurn();
             } else {
                 switchPlayerTurn();
