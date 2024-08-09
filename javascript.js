@@ -64,9 +64,11 @@ function Cell() {
 }
 
 function DomController() {
+    const header = document.querySelector(".header-text");
+
+    const getHeader = () => header;
 
     const updateHeader = (message) => {
-        const header = document.querySelector(".header-text");
         header.textContent = message;
     }
 
@@ -89,16 +91,23 @@ function DomController() {
     }
 
     const scoreBars = document.querySelector(".score-bar").children;
+    const scoreBarP1 = document.querySelector(".p1");
+    const scoreBarP2 = document.querySelector(".p2");
 
     const updateScoreBar = (p1score, p2score) => {
         scoreBars[0].style.flex = p1score;
         if (p1score) {
             scoreBars[0].textContent = p1score;
-        } 
+        }
         scoreBars[1].style.flex = p2score;
         if (p2score) {
             scoreBars[1].textContent = p2score;
-        } 
+        }
+    }
+
+    const updateScoreBarNames = (name1, name2) => {
+        scoreBarP1.textContent = name1;
+        scoreBarP2.textContent = name2;
     }
 
     const resetScoreBar = () => {
@@ -108,7 +117,7 @@ function DomController() {
         scoreBars[1].textContent = "";
     }
 
-    return { addCellIcon, resetCells, updateHeader, updateScoreBar, resetScoreBar };
+    return { addCellIcon, resetCells, getHeader, updateHeader, updateScoreBar, updateScoreBarNames, resetScoreBar };
 }
 
 function GameController(p1Name = "Player One", p2Name = "Player Two") {
@@ -130,9 +139,18 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
     }
 
     const players = [
-        { name: p1Name, token: 1, points: 0},
-        { name: p2Name, token: 2, points: 0},
+        { name: p1Name, token: 1, points: 0 },
+        { name: p2Name, token: 2, points: 0 },
     ];
+
+    const updatePlayerNames = (p1name, p2name) => {
+        const header = dom.getHeader();
+        dom.updateHeader(header.textContent.replace(players[0].name, p1name));
+        dom.updateHeader(header.textContent.replace(players[1].name, p2name));
+        players[0].name = p1name;
+        players[1].name = p2name;
+        dom.updateScoreBarNames(p1name, p2name);
+    };
 
     let activePlayer = players[0];
 
@@ -182,7 +200,7 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
     resetGame();
     dom.resetScoreBar();
 
-    return { playRound, getActivePlayer, resetGame };
+    return { playRound, getActivePlayer, resetGame, updatePlayerNames };
 }
 
 function Game() {
@@ -198,11 +216,38 @@ function Game() {
         cellIndex++;
     });
 
+    const edit = document.querySelector(".edit");
+    const dialog = document.querySelector("dialog");
+    const form = document.querySelector("form");
+    const formValues = ["Player 1", "Player 2"];
+
+    edit.addEventListener("click", () => {
+        dialog.showModal();
+        form.reset();
+    });
+
+    const handleFormSubmit = (event) => {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        // Retrieve form data
+        const formData = new FormData(form);
+
+        let i = 0;
+        formData.forEach((value) => {
+            formValues[i] = value;
+            i++;
+        });
+        gameController.updatePlayerNames(formValues[0], formValues[1]);
+        dialog.close();
+    }
+
     const reset = document.querySelector(".reset");
     reset.addEventListener("click", () => {
         gameController = GameController(); // Resets everything
-    })
+        gameController.updatePlayerNames(formValues[0], formValues[1]); // But it still keeps the names!
+    });
 
+    return { handleFormSubmit }
 }
 
 const game = Game();

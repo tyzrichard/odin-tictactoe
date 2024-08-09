@@ -36,6 +36,20 @@
         <img class="edit" src="assets/edit.svg" alt="">
         <img class="reset" src="assets/reset.svg" alt="">
     </div>
+    <dialog>
+        <form onsubmit="game.handleFormSubmit(event)">
+            <div>Change Player Names</div>
+            <div class="input">
+                <label for="p1name">Player 1</label>
+                <input type="text" id="p1name" name="p1name" maxlength="30" placeholder="Name">
+            </div>
+            <div class="input">
+                <label for="p2name">Player 2</label>
+                <input type="text" id="p2name" name="p2name" maxlength="30" placeholder="Name">
+            </div>
+            <button class="save" type="submit">Save</button>
+        </form>
+    </dialog>
 </body>
 
 </html>
