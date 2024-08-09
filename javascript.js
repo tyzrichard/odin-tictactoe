@@ -91,18 +91,24 @@ function DomController() {
     const scoreBars = document.querySelector(".score-bar").children;
 
     const updateScoreBar = (p1score, p2score) => {
-        console.log(p1score, p2score)
         scoreBars[0].style.flex = p1score;
         if (p1score) {
             scoreBars[0].textContent = p1score;
-        }
+        } 
         scoreBars[1].style.flex = p2score;
         if (p2score) {
             scoreBars[1].textContent = p2score;
-        }
+        } 
     }
 
-    return { addCellIcon, resetCells, updateHeader, updateScoreBar };
+    const resetScoreBar = () => {
+        scoreBars[0].style.flex = 1;
+        scoreBars[0].textContent = "";
+        scoreBars[1].style.flex = 1;
+        scoreBars[1].textContent = "";
+    }
+
+    return { addCellIcon, resetCells, updateHeader, updateScoreBar, resetScoreBar };
 }
 
 function GameController(p1Name = "Player One", p2Name = "Player Two") {
@@ -173,18 +179,31 @@ function GameController(p1Name = "Player One", p2Name = "Player Two") {
 
     //Initial Game Message
     startNewRound();
+    resetGame();
+    dom.resetScoreBar();
 
     return { playRound, getActivePlayer, resetGame };
 }
 
-const game = GameController();
+function Game() {
+    let gameController = GameController();
 
-let cellIndex = 0;
-boardGridCells.forEach((cell) => {
-    const column = cellIndex % 3;
-    const row = (cellIndex - column) / 3;
-    cell.addEventListener("click", () => {
-        game.playRound(row, column);
+    let cellIndex = 0;
+    boardGridCells.forEach((cell) => {
+        const column = cellIndex % 3;
+        const row = (cellIndex - column) / 3;
+        cell.addEventListener("click", () => {
+            gameController.playRound(row, column);
+        });
+        cellIndex++;
     });
-    cellIndex++;
-});
+
+    const reset = document.querySelector(".reset");
+    reset.addEventListener("click", () => {
+        gameController = GameController(); // Resets everything
+    })
+
+}
+
+const game = Game();
+
