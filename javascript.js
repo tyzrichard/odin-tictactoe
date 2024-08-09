@@ -219,7 +219,7 @@ function Game() {
     const edit = document.querySelector(".edit");
     const dialog = document.querySelector("dialog");
     const form = document.querySelector("form");
-    const formValues = ["Player 1", "Player 2"];
+    const formValues = ["Player One", "Player Two"];
 
     edit.addEventListener("click", () => {
         dialog.showModal();
@@ -234,7 +234,9 @@ function Game() {
 
         let i = 0;
         formData.forEach((value) => {
-            formValues[i] = value;
+            if (value != "") {
+                formValues[i] = value;
+            }
             i++;
         });
         gameController.updatePlayerNames(formValues[0], formValues[1]);

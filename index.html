@@ -25,29 +25,29 @@
         </div>
     </div>
     <div class="score-tracker">
-        <div class="p1">Player 1</div>
+        <div class="p1">Player One</div>
         <div class="score-bar">
             <div class="p1score"></div>
             <div class="p2score"></div>
         </div>
-        <div class="p2">Player 2</div>
+        <div class="p2">Player Two</div>
     </div>
     <div class="icons">
         <img class="edit" src="assets/edit.svg" alt="">
         <img class="reset" src="assets/reset.svg" alt="">
     </div>
     <dialog>
+        <div class="dialog-header">Change Player Names</div>
         <form onsubmit="game.handleFormSubmit(event)">
-            <div>Change Player Names</div>
             <div class="input">
                 <label for="p1name">Player 1</label>
-                <input type="text" id="p1name" name="p1name" maxlength="30" placeholder="Name">
+                <input type="text" id="p1name" name="p1name" maxlength="50" placeholder="Name">
             </div>
             <div class="input">
                 <label for="p2name">Player 2</label>
-                <input type="text" id="p2name" name="p2name" maxlength="30" placeholder="Name">
+                <input type="text" id="p2name" name="p2name" maxlength="50" placeholder="Name">
             </div>
-            <button class="save" type="submit">Save</button>
+            <div class="save"><button type="submit">Save</button></div>
         </form>
     </dialog>
 </body>

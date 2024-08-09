@@ -141,3 +141,57 @@ body {
     height: 32px;
     width: 32px;
 }
+
+dialog {
+    flex-direction: column;
+    border-width: 0;
+    border-radius: 20px;
+    width: max(350px, 40%);
+    font-size: 16px;
+    padding: 30px;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.dialog-header {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input>input {
+    background-color: #F5F5F5;
+    height: 35px;
+    border-radius: 10px;
+    border: rgba(0, 0, 0, 0.5) solid 1px;
+    padding: 0 10px;
+}
+
+.save {
+    margin-top: 10px;
+    display: flex;
+    justify-content: end;
+}
+
+.save button{
+    border: 0;
+    border-radius: 100px;
+    background-color: #FFD6BA;
+    padding: 5px 30px;
+}
